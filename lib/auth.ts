@@ -14,4 +14,9 @@ export const auth = betterAuth({
       // Send an email to the user with a link to reset their password
     },
   },
+  advanced: {
+    database: {
+      generateId: false,
+    },
+  },
 });

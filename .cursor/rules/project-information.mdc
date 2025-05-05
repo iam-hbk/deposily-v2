@@ -26,4 +26,109 @@ UI Components: shadcn/ui - Pre-built, accessible UI components based on Tailwind
 Authentication: better-auth - Handles Deposily User registration, login, and password reset securely.
 Database: PostgreSQL (via Neon.tech) - A powerful and scalable relational database hosted on Neon's serverless platform.
 Object-Relational Mapper (ORM): Drizzle ORM - Used for interacting with the PostgreSQL database in a type-safe and efficient manner.
-AI Integration: Vercel AI SDK - Facilitates communication
+AI Integration: Vercel AI SDK - Facilitates communication with AI models.
+AI Model: gemini-2.0-flash-001 - Used for validating bank statements and potentially assisting with transaction extraction. This model supports PDF input.
+Application Structure (High-Level)
+The application is organized into distinct areas using Next.js App Router conventions:
+
+Public Routes: Pages accessible to anyone (e.g., marketing, landing page, about). Located in the app/(public) directory.
+Authentication Routes: Pages for Deposily User login, registration, and password reset. Located in the app/(auth) directory.
+Protected Dashboard Routes: Pages accessible only to authenticated Deposily Users (e.g., statement management, transaction viewing, client management, settings). Located in the app/(protected) directory.
+API Routes: Backend endpoints for handling logic like file uploads, AI processing, database interactions, and client management. Located within the respective feature directories or a dedicated app/api directory.
+Database Architecture
+The application utilizes a PostgreSQL database managed via Neon.tech and accessed using Drizzle ORM. The core entities and their relationships are defined in the Drizzle schema:
+Tables:
+
+
+users: Stores information about the Deposily Users (business owners).
+
+
+id: Unique identifier (UUID).
+email: User's email (unique).
+password_hash: Stored by better-auth.
+created_at, updated_at: Timestamps.
+
+
+
+statements: Stores metadata about bank statements uploaded by a Deposily User.
+
+
+id: Unique identifier (UUID).
+user_id: Foreign key to users.
+filename: Original file name.
+filepath: Where the file is stored.
+upload_date: Timestamp of upload.
+processing_status: Current processing state (e.g., 'completed').
+validation_details: JSON details from AI validation.
+created_at, updated_at: Timestamps.
+
+
+
+clients: Stores information about the clients of a specific Deposily User.
+
+
+id: Unique identifier (UUID).
+user_id: Foreign key to users (links the client to the Deposily User).
+name: Client's name.
+client_reference: The reference string used on bank statements for this client (intended to be unique per user).
+created_at, updated_at: Timestamps.
+
+
+
+transactions: Stores credit transactions extracted from validated statements.
+
+
+id: Unique identifier (UUID).
+statement_id: Foreign key to statements (links to the source statement).
+client_id: Foreign key to clients. This can be NULL if not automatically or manually assigned.
+transaction_date: Date of the transaction.
+description: Full description from the statement.
+extracted_reference: The identified reference from the description (can be NULL).
+amount: The transaction amount (numeric, precision 15, scale 2).
+created_at, updated_at: Timestamps.
+
+
+Relationships:
+
+A user can have many statements.
+A user can have many clients.
+A statement can have many transactions.
+A client can have many transactions.
+A transaction belongs to one statement.
+A transaction can optionally belong to one client (client_id can be NULL).
+Indexes:
+Indexes are defined on foreign key columns (userId in statements and clients, statementId and clientId in transactions) and on userId and clientReference in the clients table to optimize lookups.
+Key Flows and Processes (Revised)
+
+User Authentication:
+
+
+Deposily Users register and log in using better-auth.
+Authenticated users access the protected dashboard.
+
+
+
+Bank Statement Processing:
+
+
+Deposily User uploads a statement.
+Server-side processing validates the file (type, size).
+AI validates the file as a bank statement.
+Transaction details (including potential references) are extracted.
+For each extracted transaction, the database is queried to see if a client with a matching client_reference exists for the current user_id.
+If a match is found, the transaction is stored with the corresponding client_id.
+If no match is found, the transaction is stored with client_id as NULL and the extracted_reference is saved.
+Statement metadata and transactions are saved to the database using Drizzle.
+
+
+Viewing Statements and Transactions:
+
+Deposily Users view a list of their statements.
+On a statement details page, extracted transactions are displayed. Transactions assigned to a client show the client's name. Unassigned transactions have an "Assign Client" option, often showing the extracted_reference.
+
+Client Management and Assignment:
+
+Deposily Users can view their list of clients.
+From the transaction view, for unassigned transactions, the user can trigger a client assignment flow.
+This flow allows selecting an existing client (filtered by user_id) or creating a new client record (also linked to the current user_id).
+Upon selection or creation, the transaction's client_id is updated in the database using Drizzle.
