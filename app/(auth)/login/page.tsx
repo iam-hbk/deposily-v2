@@ -18,8 +18,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2, ArrowLeft } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
 
 export default function LoginPage() {
   const router = useRouter();

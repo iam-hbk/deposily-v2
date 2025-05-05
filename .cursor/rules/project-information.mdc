@@ -1,0 +1,29 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+Project: Deposily - Simplifying Payment TrackingProject Overview
+Deposily is a web application designed to automate and simplify the process of identifying and recording incoming payments from bank statements for business owners. The goal is to help Deposily Users efficiently track deposits and credits received from their clients without manual data entry, streamlining tasks like payment reconciliation and financial tracking.
+Core Problem Deposily Solves
+Manually reviewing bank statements to find and record incoming payments from clients is a time-consuming and error-prone task for business owners. Deposily automates this by processing digital bank statements, extracting the relevant credit transactions, and facilitating the assignment of these transactions to the business owner's clients based on transaction references.
+Key Features
+Secure User Dashboard: A protected area for Deposily Users to manage their account, uploaded statements, and clients.
+Bank Statement Upload: Deposily Users can upload bank statements in PDF and CSV formats.
+AI-Powered Statement Validation: An AI model (Gemini 2.0 Flash) verifies if an uploaded file is a genuine bank statement.
+Credit Transaction Extraction: The application extracts specific details (Date, Description, Amount, potential Reference) of incoming payments from validated statements.
+Automatic Client Assignment: Transactions with references that match existing clients of the Deposily User are automatically assigned.
+Manual Client Assignment & Creation: Deposily Users can manually assign unassigned transactions to existing clients or create new client records and then assign the transaction.
+Organized Transaction View: Deposily Users can view their extracted credit transactions, showing assigned clients, within the dashboard.
+Client Management: Deposily Users can view and manage their list of clients.
+User Account Management: Deposily Users can manage their profile settings.
+Technology Stack
+Deposily is built using modern and robust technologies:
+
+Frontend Framework: Next.js (App Router) - Provides server-side rendering, routing, and API routes.
+Styling: Tailwind CSS - Utility-first CSS framework for rapid UI development.
+UI Components: shadcn/ui - Pre-built, accessible UI components based on Tailwind CSS.
+Authentication: better-auth - Handles Deposily User registration, login, and password reset securely.
+Database: PostgreSQL (via Neon.tech) - A powerful and scalable relational database hosted on Neon's serverless platform.
+Object-Relational Mapper (ORM): Drizzle ORM - Used for interacting with the PostgreSQL database in a type-safe and efficient manner.
+AI Integration: Vercel AI SDK - Facilitates communication
