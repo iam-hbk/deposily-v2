@@ -4,49 +4,67 @@ import type React from "react";
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Loader, ArrowLeft } from "lucide-react";
+import { signIn } from "@/lib/auth-client";
+import { toast } from "sonner";
+
+type AuthResponse = {
+  data: {
+    user: {
+      id: string;
+      email: string;
+    };
+  } | null;
+  error?: {
+    code: string;
+    message: string;
+    status: number;
+    statusText: string;
+  };
+};
 
 export default function LoginPage() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const loginMutation = useMutation({
+    mutationFn: async (credentials: { email: string; password: string }) => {
+      const result = await signIn.email(credentials) as AuthResponse;
+      if (result instanceof Error || (result?.error?.message)) {
+        const error = result instanceof Error ? result : new Error(result.error?.message || "Login failed");
+        throw error;
+      }
+      return result;
+    },
+    onSuccess: (data: AuthResponse) => {
+      if (!data || !data.data) {
+        toast.error("Login failed - Invalid response from server");
+        return;
+      }
+      toast.success("Login successful");
+      router.push("/dashboard");
+    },
+    onError: (error: Error) => {
+      console.error("Login failed:", error);
+      toast.error(error.message || "Failed to login. Please try again.");
+    },
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    // This is a placeholder for the actual authentication logic
-    // You would integrate with better-auth here
-    try {
-      // Simulate authentication delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // For demo purposes, we'll just redirect to the dashboard
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Login failed:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    loginMutation.mutate({ email, password });
   };
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-4xl overflow-hidden shadow-none relative">
+      <Card className="w-full max-w-md">
         <CardHeader className="justify-start absolute top-4 left-0">
           <Button variant="link" className="self-start" asChild>
             <Link href="/" className="mb-4 flex items-center gap-2">
@@ -55,7 +73,7 @@ export default function LoginPage() {
             </Link>
           </Button>
         </CardHeader>
-        <CardContent className="grid p-0 md:grid-cols-2">
+        <CardContent className="">
           <form
             onSubmit={handleSubmit}
             className="flex flex-col justify-center p-6 md:p-8 lg:p-10"
@@ -76,7 +94,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  disabled={isLoading}
+                  disabled={loginMutation.isPending}
                 />
               </div>
               <div className="grid gap-2">
@@ -95,17 +113,17 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  disabled={isLoading}
+                  disabled={loginMutation.isPending}
                 />
               </div>
               <Button
                 type="submit"
                 className="mt-4 w-full"
-                disabled={isLoading}
+                disabled={loginMutation.isPending}
               >
-                {isLoading ? (
+                {loginMutation.isPending ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />
                     Logging in...
                   </>
                 ) : (
@@ -124,7 +142,7 @@ export default function LoginPage() {
             </div>
           </form>
 
-          <div className="relative hidden items-center justify-center md:flex md:border-l">
+          {/* <div className="relative hidden items-center justify-center md:flex md:border-l">
             <Image
               src="/logo-with-text.svg"
               alt="Deposily Logo"
@@ -132,7 +150,7 @@ export default function LoginPage() {
               height={160}
               className="max-w-full object-contain"
             />
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </div>

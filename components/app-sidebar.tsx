@@ -12,7 +12,7 @@ import {
   IconBuildingBank,
   IconReportMoney,
 } from "@tabler/icons-react";
-
+import { useSession } from "@/lib/auth-client";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -29,11 +29,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 const data = {
-  user: {
-    name: "heritier",
-    email: "heritierkaumbu@gmail.com",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=ben",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -81,6 +76,16 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session, isPending } = useSession();
+
+  if (isPending) {
+    return null; // Or a loading skeleton
+  }
+
+  if (!session?.user) {
+    return null; // Or redirect to login
+  }
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -115,7 +120,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={session.user} />
       </SidebarFooter>
     </Sidebar>
   );

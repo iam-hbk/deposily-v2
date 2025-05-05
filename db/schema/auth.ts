@@ -1,10 +1,11 @@
 import {
-  pgTable,
-  text,
   timestamp,
+  text,
   boolean,
-  integer,
+  pgTable,
 } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -15,6 +16,9 @@ export const user = pgTable("user", {
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
 });
+
+export const userSelectSchema = createSelectSchema(user);
+export const userInsertSchema = createInsertSchema(user);
 
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
