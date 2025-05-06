@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
+import { Loader } from "lucide-react"
 import { authClient } from "@/lib/auth-client"
 import { toast } from "sonner"
 
@@ -70,7 +70,7 @@ export default function RegisterPage() {
         toast.error("Registration failed - Invalid response from server");
         return;
       }
-      toast.success("Registration successful");
+      toast.success("Registration successful, You'll be redirected to the dashboard shortly.");
       router.push("/dashboard");
     },
     onError: (error: Error) => {
@@ -141,7 +141,7 @@ export default function RegisterPage() {
             <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
               {registerMutation.isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader className="mr-2 h-4 w-4 animate-spin" />
                   Creating account...
                 </>
               ) : (

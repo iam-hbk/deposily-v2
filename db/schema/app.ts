@@ -22,7 +22,7 @@ export const processingStatusEnum = pgEnum("processing_status", [
 
 export const statements = pgTable("statements", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }), // Link to user table
   filename: text("filename").notNull(),
@@ -44,7 +44,7 @@ export const statements = pgTable("statements", {
 
 export const clients = pgTable("clients", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }), //User who owns the client
   name: text("name").notNull(),
