@@ -1,28 +1,40 @@
-'use client'
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuLink,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 
 export function LandingPageHeader() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 flex w-full items-center justify-center border-b backdrop-blur">
       <div className="container flex h-14 items-center">
         {/* Logo and potentially main nav links */}
         <NavigationMenu viewport={false}>
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <Link href="/" className={cn(navigationMenuTriggerStyle(), "bg-transparent hover:bg-transparent focus:bg-transparent")}>
-                  <Image src="/logo-text-only.svg" alt="deposily" width={100} height={30} className="h-6 w-auto" />
+                <Link
+                  href="/"
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    "bg-transparent hover:bg-transparent focus:bg-transparent",
+                  )}
+                >
+                  <Image
+                    src="/logo-text-only.svg"
+                    alt="deposily"
+                    width={100}
+                    height={30}
+                    className="h-6 w-auto"
+                  />
                 </Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
@@ -50,5 +62,5 @@ export function LandingPageHeader() {
         </nav>
       </div>
     </header>
-  )
-} 
+  );
+}

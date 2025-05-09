@@ -1,3 +1,5 @@
+import { relations } from "drizzle-orm";
+import { createInsertSchema } from "drizzle-zod";
 import { sql } from "drizzle-orm";
 import {
   jsonb,
@@ -11,6 +13,7 @@ import {
 
 // Assuming the users table is defined in './auth' as 'user'
 import { user } from "./auth";
+import { z } from "zod";
 
 export const processingStatusEnum = pgEnum("processing_status", [
   "uploaded",
@@ -41,6 +44,7 @@ export const statements = pgTable("statements", {
     .notNull()
     .default(sql`now()`), // Use SQL 'now()' for auto-update
 });
+export const insertStatementSchema = createInsertSchema(statements);
 
 export const clients = pgTable("clients", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -79,9 +83,11 @@ export const transactions = pgTable("transactions", {
     .notNull()
     .default(sql`now()`),
 });
+export const insertTransactionSchema = createInsertSchema(transactions, {
+  transactionDate: z.coerce.date(),
+});
 
 // Define relations for easier querying if using drizzle-orm relational queries
-import { relations } from "drizzle-orm";
 
 export const statementRelations = relations(statements, ({ one, many }) => ({
   user: one(user, { fields: [statements.userId], references: [user.id] }),

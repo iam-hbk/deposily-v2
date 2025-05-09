@@ -48,8 +48,8 @@ export default function LoginPage() {
         toast.error("Login failed - Invalid response from server");
         return;
       }
-      toast.success("Login successful");
       router.push("/dashboard");
+      toast.success("Login successful");
     },
     onError: (error: Error) => {
       console.error("Login failed:", error);

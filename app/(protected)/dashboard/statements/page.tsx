@@ -1,13 +1,31 @@
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Upload, Eye, MoreHorizontal } from "lucide-react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Upload, Eye, MoreHorizontal } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // This would typically come from your database
-const statements: any[] = []
+const statements: any[] = [];
 
 export default function StatementsPage() {
   return (
@@ -15,7 +33,9 @@ export default function StatementsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Statements</h1>
-          <p className="text-muted-foreground">View and manage your uploaded bank statements</p>
+          <p className="text-muted-foreground">
+            View and manage your uploaded bank statements
+          </p>
         </div>
         <Link href="/dashboard/statements/upload">
           <Button className="gap-2">
@@ -29,15 +49,25 @@ export default function StatementsPage() {
         <Card>
           <CardHeader>
             <CardTitle>No Statements</CardTitle>
-            <CardDescription>You haven't uploaded any bank statements yet</CardDescription>
+            <CardDescription>
+              You haven't uploaded any bank statements yet
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col items-center justify-center py-8">
-              <div className="mb-4 rounded-full bg-primary/10 p-6">
-                <Image src="/logo-no-text.svg" alt="deposily" width={40} height={40} className="h-10 w-10" />
+              <div className="bg-primary/10 mb-4 rounded-full p-6">
+                <Image
+                  src="/logo-no-text.svg"
+                  alt="deposily"
+                  width={40}
+                  height={40}
+                  className="h-10 w-10"
+                />
               </div>
               <h3 className="mb-2 text-xl font-medium">No statements found</h3>
-              <p className="mb-6 text-center text-muted-foreground">Upload your first bank statement to get started</p>
+              <p className="text-muted-foreground mb-6 text-center">
+                Upload your first bank statement to get started
+              </p>
               <Link href="/dashboard/statements/upload">
                 <Button size="lg" className="gap-2">
                   <Upload className="h-4 w-4" />
@@ -51,7 +81,10 @@ export default function StatementsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Your Statements</CardTitle>
-            <CardDescription>Manage your uploaded bank statements and view extracted transactions</CardDescription>
+            <CardDescription>
+              Manage your uploaded bank statements and view extracted
+              transactions
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
@@ -67,8 +100,12 @@ export default function StatementsPage() {
               <TableBody>
                 {statements.map((statement) => (
                   <TableRow key={statement.id}>
-                    <TableCell className="font-medium">{statement.filename}</TableCell>
-                    <TableCell>{new Date(statement.uploadedAt).toLocaleDateString()}</TableCell>
+                    <TableCell className="font-medium">
+                      {statement.filename}
+                    </TableCell>
+                    <TableCell>
+                      {new Date(statement.uploadedAt).toLocaleDateString()}
+                    </TableCell>
                     <TableCell>{statement.status}</TableCell>
                     <TableCell>{statement.transactionCount}</TableCell>
                     <TableCell>
@@ -97,5 +134,5 @@ export default function StatementsPage() {
         </Card>
       )}
     </div>
-  )
+  );
 }

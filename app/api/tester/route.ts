@@ -1,0 +1,34 @@
+import { google } from "@ai-sdk/google";
+import { streamText } from "ai";
+
+import { tool as createTool } from "ai";
+import { z } from "zod";
+
+export const weatherTool = createTool({
+  description: "Display the weather for a location",
+  parameters: z.object({
+    location: z.string().describe("The location to get the weather for"),
+  }),
+  execute: async function ({ location }) {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return { weather: "Sunny", temperature: 75, location };
+  },
+});
+
+export const tools = {
+  displayWeather: weatherTool,
+};
+
+export async function POST(request: Request) {
+  const { messages } = await request.json();
+
+  const result = streamText({
+    model: google("gemini-2.0-flash-001"),
+    system: "You are a friendly assistant!",
+    messages,
+    maxSteps: 5,
+    tools,
+  });
+
+  return result.toDataStreamResponse();
+}
