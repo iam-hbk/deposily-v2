@@ -17,7 +17,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
-        <div className="container mx-auto border border-red-600 p-4 my-4">
+        <div className="container mx-auto p-4 my-4">
           {children}
         </div>
       </SidebarInset>

@@ -191,7 +191,7 @@ export default function StatementDetailPage(props: {
               <TableRow>
                 <TableHead>Date</TableHead>
                 <TableHead>Description</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+                <TableHead className="text-right">Amount (in Rands)</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -202,7 +202,7 @@ export default function StatementDetailPage(props: {
                   </TableCell>
                   <TableCell>{transaction.description}</TableCell>
                   <TableCell className="text-right font-medium">
-                    ${parseFloat(transaction.amount).toFixed(2)}
+                    {parseFloat(transaction.amount).toFixed(2)}
                   </TableCell>
                 </TableRow>
               ))}

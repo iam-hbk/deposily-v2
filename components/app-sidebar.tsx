@@ -3,7 +3,6 @@
 import * as React from "react";
 import {
   IconDashboard,
-  IconFileUpload,
   IconUsers,
   IconSettings,
   IconHelp,
@@ -12,7 +11,6 @@ import {
   IconBuildingBank,
   IconReportMoney,
 } from "@tabler/icons-react";
-import { useSession } from "@/lib/auth-client";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -76,16 +74,6 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: session, isPending } = useSession();
-
-  if (isPending) {
-    return null; // Or a loading skeleton
-  }
-
-  if (!session?.user) {
-    return null; // Or redirect to login
-  }
-
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -120,7 +108,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={session.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

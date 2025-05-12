@@ -5,10 +5,9 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { statementId: string } },
-) {
+type Params = Promise<{ statementId: string }>;
+
+export async function GET(request: Request, segmentData: { params: Params }) {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -18,7 +17,7 @@ export async function GET(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { statementId } = params;
+    const { statementId } = await segmentData.params;
 
     // Get the statement
     const statement = await db.query.statements.findFirst({
