@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { sql } from "drizzle-orm";
 import {
   jsonb,
@@ -44,7 +44,6 @@ export const statements = pgTable("statements", {
     .notNull()
     .default(sql`now()`), // Use SQL 'now()' for auto-update
 });
-export const insertStatementSchema = createInsertSchema(statements);
 
 export const clients = pgTable("clients", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -83,9 +82,6 @@ export const transactions = pgTable("transactions", {
     .notNull()
     .default(sql`now()`),
 });
-export const insertTransactionSchema = createInsertSchema(transactions, {
-  transactionDate: z.coerce.date(),
-});
 
 // Define relations for easier querying if using drizzle-orm relational queries
 
@@ -109,3 +105,25 @@ export const transactionRelations = relations(transactions, ({ one }) => ({
     references: [clients.id],
   }),
 }));
+
+export const insertStatementSchema = createInsertSchema(statements);
+export type InsertStatement = z.infer<typeof insertStatementSchema>;
+export const insertClientSchema = createInsertSchema(clients);
+export type InsertClient = z.infer<typeof insertClientSchema>;
+export const insertTransactionSchema = createInsertSchema(transactions, {
+  transactionDate: z.coerce.date(),
+});
+export type InsertTransaction = z.infer<typeof insertTransactionSchema>;
+export const selectStatementSchema = createSelectSchema(statements);
+export type SelectStatement = z.infer<typeof selectStatementSchema>;
+export const selectClientSchema = createSelectSchema(clients);
+export type SelectClient = z.infer<typeof selectClientSchema>;
+export const selectTransactionSchema = createSelectSchema(transactions);
+export type SelectTransaction = z.infer<typeof selectTransactionSchema>;
+export const selectStatementWithTransactionsSchema =
+  selectStatementSchema.extend({
+    transactions: z.array(selectTransactionSchema),
+  });
+export type SelectStatementWithTransactions = z.infer<
+  typeof selectStatementWithTransactionsSchema
+>;

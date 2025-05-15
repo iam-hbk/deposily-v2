@@ -1,6 +1,8 @@
 import { auth } from "@/lib/auth";
 import { z } from "zod";
 import { APIError } from "better-auth/api";
+import { cookies } from "next/headers";
+
 export const SignupFormSchema = z.object({
   name: z
     .string()
@@ -54,7 +56,16 @@ export async function signup(state: FormState, formData: FormData) {
       },
       asResponse: true,
     });
-    
+
+    const cookieStore = await cookies();
+
+    if (headers.get("set-cookie")) {
+      cookieStore.set("next-auth.session-token", headers.get("set-cookie")!, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      });
+    }
+    console.log(json);
   } catch (error) {
     if (error instanceof APIError) {
       console.log(error.message, error.status);

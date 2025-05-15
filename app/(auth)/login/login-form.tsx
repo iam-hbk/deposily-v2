@@ -29,7 +29,9 @@ export function SignupForm() {
           </ul>
         </div>
       )}
-      <button type="submit">Sign Up</button>
+      <button disabled={pending} type="submit">
+        Sign Up
+      </button>
     </form>
   );
 }

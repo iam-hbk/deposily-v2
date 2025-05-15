@@ -83,21 +83,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <Link href="/dashboard">
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/logo-no-text.svg"
-                    alt="Deposily Logo"
-                    width={42}
-                    height={42}
-                  />
-                  <Image
-                    src="/logo-text-only.svg"
-                    alt="Deposily Logo"
-                    width={80}
-                    height={80}
-                  />
-                </div>
+              <Link href="/" className="flex items-center gap-2 p-2">
+                <Image
+                  src="/logo-no-text.svg"
+                  alt="Deposily Logo"
+                  width={42}
+                  height={42}
+                />
+                <Image
+                  src="/logo-text-only.svg"
+                  alt="Deposily Logo"
+                  width={80}
+                  height={80}
+                />
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

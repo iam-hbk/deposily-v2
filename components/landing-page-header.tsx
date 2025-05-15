@@ -12,7 +12,11 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 
+import { useSession } from "@/lib/auth-client";
+import { Skeleton } from "./ui/skeleton";
+import LoadingIndicator from "./loading-indicator";
 export function LandingPageHeader() {
+  const { data: session, isPending, error, refetch } = useSession();
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 flex w-full items-center justify-center border-b backdrop-blur">
       <div className="container flex h-14 items-center">
@@ -52,14 +56,34 @@ export function LandingPageHeader() {
         </NavigationMenu>
 
         {/* Auth links */}
-        <nav className="ml-auto flex items-center gap-2">
-          <Link href="/login">
-            <Button variant="ghost">Login</Button>
-          </Link>
-          <Link href="/register">
-            <Button>Sign Up</Button>
-          </Link>
-        </nav>
+        {isPending ? (
+          <div className="ml-auto flex items-center gap-2">
+            <Skeleton className="h-10 w-20" />
+          </div>
+        ) : error ? (
+          <div className="ml-auto flex items-center gap-2">
+            <Button variant="outline" onClick={refetch}>
+              Try again
+            </Button>
+          </div>
+        ) : !!session ? (
+          <div className="ml-auto flex items-center gap-2">
+            <Button variant="outline" asChild>
+              <Link href="/dashboard" className="flex items-center gap-2">
+                Dashboard <LoadingIndicator />
+              </Link>
+            </Button>
+          </div>
+        ) : (
+          <nav className="ml-auto flex items-center gap-2">
+            <Link href="/login">
+              <Button variant="ghost">Login</Button>
+            </Link>
+            <Link href="/register">
+              <Button>Sign Up</Button>
+            </Link>
+          </nav>
+        )}
       </div>
     </header>
   );

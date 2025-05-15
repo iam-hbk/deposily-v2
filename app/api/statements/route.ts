@@ -5,7 +5,7 @@ import { eq, desc } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
 
@@ -32,4 +32,4 @@ export async function GET(request: Request) {
     console.error("Error fetching statements:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
-} 
+}

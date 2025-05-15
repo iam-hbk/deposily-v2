@@ -1,13 +1,13 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/db/drizzle";
-import { statements, transactions } from "@/db/schema/app";
+import { statements } from "@/db/schema/app";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 
 type Params = Promise<{ statementId: string }>;
 
-export async function GET(request: Request, segmentData: { params: Params }) {
+export async function GET(_request: Request, segmentData: { params: Params }) {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),

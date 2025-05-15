@@ -172,7 +172,7 @@ export async function POST(request: Request) {
     console.error("Error processing statement:", error);
 
     let errorMessage = "Failed to process statement";
-    let statusCode = 500;
+    const statusCode = 500;
 
     if (error instanceof Error && error.message?.includes("API key")) {
       errorMessage = "API configuration error";

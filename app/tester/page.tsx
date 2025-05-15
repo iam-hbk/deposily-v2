@@ -68,9 +68,9 @@ type WeatherProps = {
   location: string;
 };
 
-export const Weather = ({ temperature, weather, location }: WeatherProps) => {
+const Weather = ({ temperature, weather, location }: WeatherProps) => {
   return (
-    <div className="rounded-md border border-gray-300 p-2 bg-amber-500">
+    <div className="rounded-md border border-gray-300 bg-amber-500 p-2">
       <h2 className="text-lg font-bold">Current Weather for {location}</h2>
       <p className="text-sm">Condition: {weather}</p>
       <p className="text-sm">Temperature: {temperature}°C</p>

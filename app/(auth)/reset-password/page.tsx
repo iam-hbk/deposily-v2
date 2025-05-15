@@ -54,7 +54,7 @@ export default function ResetPasswordPage() {
           <CardContent className="flex flex-col items-center justify-center py-6">
             <CheckCircle className="mb-4 h-12 w-12 text-primary" />
             <p className="text-center">
-              We've sent a password reset link to <strong>{email}</strong>. Please check your email and follow the
+              We&apos;ve sent a password reset link to <strong>{email}</strong>. Please check your email and follow the
               instructions.
             </p>
           </CardContent>

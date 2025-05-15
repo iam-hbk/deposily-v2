@@ -22,8 +22,11 @@ import { useQuery } from "@tanstack/react-query";
 import { formatDate } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { use } from "react";
+import { SelectStatementWithTransactions } from "@/db/schema/app";
 // Function to fetch statement by ID
-async function getStatement(statementId: string) {
+async function getStatementWithTransactions(
+  statementId: string,
+): Promise<SelectStatementWithTransactions> {
   const response = await fetch(`/api/statements/${statementId}`);
   if (!response.ok) {
     throw new Error("Failed to fetch statement");
@@ -44,7 +47,7 @@ export default function StatementDetailPage(props: {
     error,
   } = useQuery({
     queryKey: ["statement", statementId],
-    queryFn: () => getStatement(statementId),
+    queryFn: () => getStatementWithTransactions(statementId),
   });
 
   // Handle loading state
@@ -119,9 +122,13 @@ export default function StatementDetailPage(props: {
     );
   }
 
+  if (!statement) {
+    return <div>No statement found</div>;
+  }
+
   // Calculate the number of credit transactions (positive amounts)
   const creditTransactions = statement.transactions.filter(
-    (transaction: any) => parseFloat(transaction.amount) > 0,
+    (transaction) => parseFloat(transaction.amount) > 0,
   );
 
   return (
@@ -195,7 +202,7 @@ export default function StatementDetailPage(props: {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {creditTransactions.map((transaction: any) => (
+              {creditTransactions.map((transaction) => (
                 <TableRow key={transaction.id}>
                   <TableCell>
                     {formatDate(transaction.transactionDate)}

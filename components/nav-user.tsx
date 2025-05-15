@@ -29,15 +29,7 @@ import {
 import { signOut, useSession } from "@/lib/auth-client";
 import { Skeleton } from "@/components/ui/skeleton";
 
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  image?: string | null;
-  emailVerified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-};
+
 
 export function NavUser() {
   const router = useRouter();
