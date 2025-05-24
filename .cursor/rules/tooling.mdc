@@ -1,0 +1,7 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- Using nextjs 15 app router
+- pnpm for package management
