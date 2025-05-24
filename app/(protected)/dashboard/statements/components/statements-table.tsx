@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Upload, Eye, MoreHorizontal, AlertCircle } from "lucide-react";
+import { Upload, AlertCircle } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -19,21 +20,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
-import { formatDate } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   getStatements,
   SelectStatementWithTransactionsWithIDsOnly,
 } from "../api";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { columns } from "./columns";
 
 const StatementsTable = () => {
+  const router = useRouter();
   const {
     data: statements,
     isLoading,
@@ -43,6 +45,13 @@ const StatementsTable = () => {
     queryKey: ["statements"],
     queryFn: getStatements,
   });
+
+  const table = useReactTable({
+    data: statements ?? [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
   if (isLoading) {
     return (
       <div className="space-y-8">
@@ -173,52 +182,63 @@ const StatementsTable = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Filename</TableHead>
-                  <TableHead>Upload Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Transactions</TableHead>
-                  <TableHead className="w-[80px]"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {statements &&
-                  statements.map((statement) => (
-                    <TableRow key={statement.id}>
-                      <TableCell className="font-medium">
-                        {statement.filename}
-                      </TableCell>
-                      <TableCell>{formatDate(statement.uploadDate)}</TableCell>
-                      <TableCell className="capitalize">
-                        {statement.processingStatus}
-                      </TableCell>
-                      <TableCell>{statement.transactions.length}</TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Actions</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <Link
-                              href={`/dashboard/statements/${statement.id}`}
-                            >
-                              <DropdownMenuItem>
-                                <Eye className="mr-2 h-4 w-4" />
-                                View Details
-                              </DropdownMenuItem>
-                            </Link>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <TableHead key={header.id}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                          </TableHead>
+                        );
+                      })}
                     </TableRow>
                   ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                        onClick={(e) => {
+                          if (e.target instanceof HTMLElement && e.target.closest('a, button')) {
+                            return;
+                          }
+                          router.push(`/dashboard/statements/${row.original.id}`);
+                        }}
+                        className="cursor-pointer"
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       )}
