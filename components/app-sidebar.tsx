@@ -38,11 +38,11 @@ const data = {
       url: "/dashboard/statements",
       icon: IconBuildingBank,
     },
-    {
-      title: "Transactions",
-      url: "/dashboard/transactions",
-      icon: IconCreditCard,
-    },
+    // {
+    //   title: "Transactions",
+    //   url: "/dashboard/transactions",
+    //   icon: IconCreditCard,
+    // },
     {
       title: "Clients",
       url: "/dashboard/clients",
