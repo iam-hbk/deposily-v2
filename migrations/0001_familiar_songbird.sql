@@ -1,0 +1,1 @@
+ALTER TABLE "clients" ADD COLUMN "expected_payment_day" numeric(2, 0);

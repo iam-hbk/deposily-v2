@@ -52,6 +52,10 @@ export const clients = pgTable("clients", {
     .references(() => user.id, { onDelete: "cascade" }), //User who owns the client
   name: text("name").notNull(),
   clientReference: text("client_reference").notNull(), // Unique per user is handled application-side or via composite index if needed
+  expectedPaymentDay: numeric("expected_payment_day", {
+    precision: 2,
+    scale: 0,
+  }), // Stores 1, 15, 25, 30. Nullable.
   createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -83,7 +87,7 @@ export const transactions = pgTable("transactions", {
     .default(sql`now()`),
 });
 
-// Define relations for easier querying if using drizzle-orm relational queries
+// --- Relations ---
 
 export const statementRelations = relations(statements, ({ one, many }) => ({
   user: one(user, { fields: [statements.userId], references: [user.id] }),
@@ -106,24 +110,36 @@ export const transactionRelations = relations(transactions, ({ one }) => ({
   }),
 }));
 
+/* Schemas */
+
+// statements and transactions
+
 export const insertStatementSchema = createInsertSchema(statements);
 export type InsertStatement = z.infer<typeof insertStatementSchema>;
-export const insertClientSchema = createInsertSchema(clients);
-export type InsertClient = z.infer<typeof insertClientSchema>;
-export const insertTransactionSchema = createInsertSchema(transactions, {
-  transactionDate: z.coerce.date(),
-});
-export type InsertTransaction = z.infer<typeof insertTransactionSchema>;
 export const selectStatementSchema = createSelectSchema(statements);
 export type SelectStatement = z.infer<typeof selectStatementSchema>;
-export const selectClientSchema = createSelectSchema(clients);
-export type SelectClient = z.infer<typeof selectClientSchema>;
 export const selectTransactionSchema = createSelectSchema(transactions);
 export type SelectTransaction = z.infer<typeof selectTransactionSchema>;
 export const selectStatementWithTransactionsSchema =
   selectStatementSchema.extend({
     transactions: z.array(selectTransactionSchema),
   });
+export const insertTransactionSchema = createInsertSchema(transactions, {
+  transactionDate: z.coerce.date(),
+});
 export type SelectStatementWithTransactions = z.infer<
   typeof selectStatementWithTransactionsSchema
+>;
+
+// clients
+export const insertClientSchema = createInsertSchema(clients);
+export type InsertClient = z.infer<typeof insertClientSchema>;
+export type InsertTransaction = z.infer<typeof insertTransactionSchema>;
+export const selectClientSchema = createSelectSchema(clients);
+export type SelectClient = z.infer<typeof selectClientSchema>;
+export const selectClientWithTransactionsSchema = selectClientSchema.extend({
+  transactions: z.array(selectTransactionSchema),
+});
+export type SelectClientWithTransactions = z.infer<
+  typeof selectClientWithTransactionsSchema
 >;
