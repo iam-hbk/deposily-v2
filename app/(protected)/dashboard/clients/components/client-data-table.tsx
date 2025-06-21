@@ -136,7 +136,7 @@ export function ClientDataTable() {
                 </DialogDescription>
               </DialogHeader>
               <AddClientForm 
-                onSubmit={handleAddClientSubmit} 
+                onSubmitAction={handleAddClientSubmit} 
                 isSubmitting={addClientMutation.isPending}
                 onCancel={() => setIsAddClientDialogOpen(false)}
               />

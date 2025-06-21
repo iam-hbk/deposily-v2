@@ -8,13 +8,13 @@ export type SelectStatementWithTransactionsWithIDsOnly = Omit<
     id: string;
   }[];
 };
-// Function to fetch statements
+
+// Client-side function to fetch statements via API
 export async function getStatements(): Promise<
   SelectStatementWithTransactionsWithIDsOnly[]
 > {
   const response = await fetch("/api/statements");
   if (!response.ok) {
-    // Consider more specific error handling based on response status
     throw new Error("Failed to fetch statements");
   }
   return response.json();

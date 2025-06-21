@@ -25,14 +25,14 @@ import { Loader2 } from "lucide-react";
 import { addClientFormSchema, AddClientFormValues } from "./add-client-form-schema";
 
 interface AddClientFormProps {
-  onSubmit: (values: AddClientFormValues) => Promise<void>;
+  onSubmitAction: (values: AddClientFormValues) => Promise<void>;
   isSubmitting: boolean;
   onCancel?: () => void; // Optional cancel handler for dialogs
 }
 
 const paymentDays = [1, 15, 25, 30];
 
-export function AddClientForm({ onSubmit, isSubmitting, onCancel }: AddClientFormProps) {
+export function AddClientForm({ onSubmitAction, isSubmitting, onCancel }: AddClientFormProps) {
   const form = useForm<AddClientFormValues>({
     resolver: zodResolver(addClientFormSchema),
     defaultValues: {
@@ -43,7 +43,7 @@ export function AddClientForm({ onSubmit, isSubmitting, onCancel }: AddClientFor
   });
 
   const handleFormSubmit = async (values: AddClientFormValues) => {
-    await onSubmit(values);
+    await onSubmitAction(values);
     // Optionally reset form here if dialog stays open: form.reset();
   };
 
