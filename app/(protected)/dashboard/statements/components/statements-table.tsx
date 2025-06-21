@@ -27,7 +27,7 @@ import {
   SelectStatementWithTransactionsWithIDsOnly,
 } from "../api";
 import {
-  ColumnDef,
+  // ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,

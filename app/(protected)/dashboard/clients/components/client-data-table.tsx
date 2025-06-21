@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import {
-  ColumnDef,
+  // ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
@@ -34,8 +34,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
-  DialogClose,
+  // DialogFooter,
+  // DialogClose,
 } from "@/components/ui/dialog";
 import { AddClientForm } from "./add-client-form";
 import { AddClientFormValues } from "./add-client-form-schema";

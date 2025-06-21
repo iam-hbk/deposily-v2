@@ -1,16 +1,16 @@
-import { ClientRow } from "./components/columns";
+// import { ClientRow } from "./components/columns";
 import { SelectClient, SelectClientWithTransactions } from "@/db/schema/app";
 import { AddClientFormValues } from "./components/add-client-form-schema"; // Import form values type
 
-type ApiClientResponse = Omit<
-  SelectClient,
-  "createdAt" | "updatedAt" | "expectedPaymentDay"
-> & {
-  createdAt: string;
-  updatedAt: string;
-  expectedPaymentDay: string | null;
-  hasPaidThisMonth: boolean;
-};
+// type ApiClientResponse = Omit<
+//   SelectClient,
+//   "createdAt" | "updatedAt" | "expectedPaymentDay"
+// > & {
+//   createdAt: string;
+//   updatedAt: string;
+//   expectedPaymentDay: string | null;
+//   hasPaidThisMonth: boolean;
+// };
 
 export async function getClients(): Promise<SelectClientWithTransactions[]> {
   const response = await fetch("/api/clients");
