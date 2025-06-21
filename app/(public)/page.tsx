@@ -12,8 +12,8 @@ export default function Home() {
       {/* Hero Section */}
       <section className="flex-1">
         <div className="container flex h-screen flex-col items-center justify-center">
-          <div className="flex flex-col items-start justify-center gap-4 border border-red-500 md:flex-row">
-            <div className="flex flex-col items-start justify-center gap-4 border border-red-500">
+          <div className="flex flex-col items-start justify-center gap-4 md:flex-row">
+            <div className="flex flex-col items-start justify-center gap-4">
               <h1 className="max-w-sm text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
                 Unlock Insights from Your Bank Statements
               </h1>
@@ -22,7 +22,7 @@ export default function Home() {
                 your statements and get organized results instantly.
               </p>
             </div>
-            <div className="flex flex-col items-start justify-center gap-4 border border-red-500">
+            <div className="flex flex-col items-start justify-center gap-4">
               <Image
                 src="/logo-no-text.svg"
                 alt="AI Processing Icon"
@@ -47,7 +47,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-muted/40 w-full flex flex-col items-center border-t">
+      <section className="bg-muted/40 flex w-full flex-col items-center border-t">
         <div className="container py-20 md:py-24 lg:py-32">
           <h2 className="mb-12 text-center text-3xl font-bold tracking-tight md:mb-16 md:text-4xl">
             Simple Steps to Financial Clarity
