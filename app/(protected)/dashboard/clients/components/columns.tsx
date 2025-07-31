@@ -84,12 +84,12 @@ export const columns: ColumnDef<ClientRow>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(client.id)}
             >
               Copy client ID
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href={`/dashboard/clients/${client.id}`}>View/Edit Client</Link>
             </DropdownMenuItem>

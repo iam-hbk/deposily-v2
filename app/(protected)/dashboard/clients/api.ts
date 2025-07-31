@@ -56,3 +56,49 @@ export async function addClient(
     throw error;
   }
 }
+
+// Get a single client with transactions
+export async function getClientDetails(clientId: string): Promise<SelectClientWithTransactions> {
+  const response = await fetch(`/api/clients/${clientId}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch client details");
+  }
+  return response.json();
+}
+
+// Update an existing client
+export async function updateClient(client: Partial<SelectClientWithTransactions> & { id: string }) {
+  const response = await fetch(`/api/clients/${client.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(client),
+  });
+
+  const responseData = await response.json();
+
+  if (!response.ok) {
+    console.error("Update error:", responseData);
+    throw new Error(responseData.message || "Failed to update client");
+  }
+
+  return responseData as SelectClientWithTransactions;
+}
+
+// Delete a client
+export async function deleteClient(clientId: string) {
+  const response = await fetch(`/api/clients/${clientId}`, {
+    method: "DELETE",
+  });
+
+  const responseData = await response.json();
+
+  if (!response.ok) {
+    console.error("Delete error:", responseData);
+    throw new Error(responseData.message || "Failed to delete client");
+  }
+
+  return responseData;
+}
+
